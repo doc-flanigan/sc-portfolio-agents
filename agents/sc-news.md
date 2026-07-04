@@ -229,6 +229,42 @@ Before returning the final message, verify against this checklist. If any item f
 
 ---
 
+## Step 5 — Update the claims ledger (durable facts only)
+
+The network keeps a **claims ledger** at `E:\Claude Code\sc-portfolio\docs\claims\` — one
+markdown file per fact-checked claim (canonical text, status, official sources,
+`lastVerified`, and a `usage` map of the pages that assert it). After the digest is written,
+feed the ledger the small number of **durable, reusable facts** this week's news verified —
+so the sites and the fact-checker stay current. This is a required closing step whenever the
+ledger is present.
+
+Skip the whole step gracefully if the ledger isn't here:
+`[ -d "E:\Claude Code\sc-portfolio\docs\claims" ] || echo "no ledger, skipping"`.
+
+**What qualifies** (add these): a changed or confirmed Squadron 42 / Star Citizen release
+window, a newly announced event with dates, a confirmed feature going live, a cast/character
+or roadmap fact, a mechanics change (e.g. referral bonus amount). **What does NOT** (leave
+out): ordinary weekly patch chatter, ship sales, streams, anything ephemeral. When in doubt,
+don't add it — the ledger is a curated spine, not a news log.
+
+Before adding, check for an existing entry first, then use the `upsert.mjs` helper (you only
+have Bash, so this keeps frontmatter well-formed):
+
+```bash
+L="E:\Claude Code\sc-portfolio\docs\claims"
+grep -ril "<key terms>" "$L"                          # already tracked?
+node "$L/upsert.mjs" verify <claim-id>                # re-confirmed an existing fact today
+node "$L/upsert.mjs" status <claim-id> refuted        # this week's news overturned it
+node "$L/upsert.mjs" add <new-kebab-id> --claim "<one sentence>" \
+  --status verified --source "<official RSI/comm-link URL>" \
+  --usage "(surfaced via sc-news weekly digest)"      # a durable new fact
+```
+
+`<claim-id>` is the ledger filename without `.md`; `add` refuses to clobber an existing id.
+Then note in your handoff (not in the reader-facing digest) which ledger entries you touched.
+
+---
+
 ## Accuracy rules
 
 - Never invent details, statistics, or quotes.

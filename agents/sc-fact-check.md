@@ -47,13 +47,30 @@ grep -ril "<key terms>" "E:\Claude Code\sc-portfolio\docs\claims"
 - If your evidence genuinely contradicts a ledger entry, the verdict is ❌ AND you flag the
   ledger file for a status flip — its `usage` list is the blast-radius map of pages to fix.
 
-**After the audit, write back:**
+**After the audit, write back — this is a required final step, not optional.** Use the
+`upsert.mjs` helper so frontmatter is always well-formed (you only have Bash, not Write).
+First skip the whole step gracefully if the ledger is absent:
+`[ -d "E:\Claude Code\sc-portfolio\docs\claims" ] || echo "no ledger here, skipping write-back"`.
+Then, for each claim you gave a verdict on:
 
-- Re-confirmed a ledger claim → update its `lastVerified` to today.
-- Verified a claim not yet in the ledger → create its file (follow the README schema; seed
-  `usage` with the page you audited).
-- Refuted or downgraded a ledger claim → flip its `status`, note why below the frontmatter,
-  and list the affected pages from `usage` in your report.
+```bash
+L="E:\Claude Code\sc-portfolio\docs\claims"
+# Re-confirmed an existing ledger claim (✅ against its pinned source):
+node "$L/upsert.mjs" verify <claim-id>
+# Refuted or downgraded an existing claim:
+node "$L/upsert.mjs" status <claim-id> refuted        # or: unverifiable
+# Verified a NEW fact not yet in the ledger (create it):
+node "$L/upsert.mjs" add <new-kebab-id> --claim "<one-sentence claim>" \
+  --status verified --source "<official URL>" [--source "<url>"] \
+  --usage "<site.com /page — where it appears>"
+```
+
+Rules: `<claim-id>` is the ledger filename without `.md` (grep found it above). Only `add`
+facts that are durable and reusable (release windows, event dates, cast/character, mechanics)
+— not one-off audit trivia. `add` refuses to clobber an existing id, so re-run failures with
+`verify`/`status`. In your final report, list every ledger change you made (a "Ledger
+updates" section) so the caller sees the blast radius; for refutations, include the affected
+pages from the claim's `usage` map.
 
 ---
 
@@ -235,6 +252,15 @@ N. ❓ UNVERIFIABLE FROM OFFICIAL SOURCES — [original claim, abbreviated]
 End with a **summary table of items requiring action**, sorted by priority (Critical → High → Medium → Low). Include only ⚠️, ❌, and ❓ entries; ✅ entries do not need a summary line.
 
 Hard cap: **800 words total** unless the user gives you more than fifteen claims, in which case scale linearly (≈50 words per claim).
+
+### Step 4 — Write back to the claims ledger
+
+Before you return, run the ledger write-back from the "Claims ledger" section above:
+`node "…/docs/claims/upsert.mjs" verify|status|add …` for every verdict — bump `lastVerified`
+on re-confirmed claims, flip `status` on refutations, `add` durable newly-verified facts.
+Then append a short **Ledger updates** section to your report listing exactly what you
+changed. Skip this step only if the ledger directory isn't present. The audit is not
+complete until the ledger reflects it.
 
 ---
 
