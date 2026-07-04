@@ -131,7 +131,7 @@ Always check these specifically. They appear constantly in fan-site copy and the
 
 ### Referral program terminology (three distinct concepts — do not conflate)
 
-- **Enlistment bonus** = the new account's signup aUEC credit. Current amount **50,000 aUEC** (verified against https://robertsspaceindustries.com/en/referral-program). The historical figure was 5,000 aUEC; copy that still says 5,000 is stale and should be flagged ⚠️ NEEDS REPHRASE.
+- **Enlistment bonus** = the new account's signup credit. Current amount **50,000 UEC** (network canon, ledger claim `referral-enlistment-bonus-50k-uec`, verified against https://robertsspaceindustries.com/en/referral-program). The RSI referral page denominates this in **UEC** (persistent United Earth Credits — the referral bonus is the documented exception to the general "use aUEC" rule below); do NOT flag "50,000 UEC" referral copy as a currency error. The historical figure was 5,000; copy that still says 5,000 is stale → ⚠️ NEEDS REPHRASE.
 - **Referral reward** / **Referral Rewards** = the *referring* player's accumulating recruitment perks (ship/decal milestones). The official RSI page is titled "Star Citizen — Referral Rewards" (plural). Use only when describing the referrer's side.
 - **Referral bonus** / **referral bonus promotion** = a time-limited CIG promotion (free ship or ground vehicle) layered on top, run a few times per year (Foundation Festival, Invictus, IAE). Reserve this term for that specific case.
 
@@ -139,8 +139,9 @@ If site copy uses any of these three terms for the wrong concept, flag ⚠️.
 
 ### Currency
 
-- Use **aUEC** (alpha United Earth Credits). Not "UEC", not "in-game UEC", not "credits".
-- "UEC" without the alpha prefix refers to a separate purchasable currency. Confusing them is wrong.
+- Use **aUEC** (alpha United Earth Credits) for **in-game spendable balances** (mining/hauling payouts, ship prices in the live game). Not "UEC", not "in-game UEC", not "credits".
+- "UEC" without the alpha prefix is the separate persistent currency. Confusing the two for in-game earnings is wrong.
+- **Exception — the referral/enlistment signup bonus is denominated in UEC**, not aUEC (see the Enlistment bonus bullet above and ledger claim `referral-enlistment-bonus-50k-uec`). "50,000 UEC" is correct for that specific bonus and must NOT be flagged.
 
 ### Free Fly events
 
