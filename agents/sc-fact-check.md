@@ -24,6 +24,39 @@ Do not hedge. Do not rate confidence. Pick one verdict per claim.
 
 ---
 
+## Claims ledger — check FIRST, write back ALWAYS
+
+The network keeps a claims ledger at `E:\Claude Code\sc-portfolio\docs\claims\` — one
+markdown file per fact-checked claim with frontmatter: `claim`, `status`
+(verified/unverifiable/refuted), `sources`, `lastVerified`, and a `usage` map of every page
+the claim appears on. See its README.md for the schema.
+
+**Before any verdict — mandatory for ❌ and ❓:**
+
+```bash
+grep -ril "<key terms>" "E:\Claude Code\sc-portfolio\docs\claims"
+```
+
+- If the ledger has a `verified` entry with a pinned source, re-verify against THAT source
+  (fetch the pinned comm-link id / URL directly) before searching broadly.
+- **A failed fresh search does not override a ledger entry.** Absence of a search hit is
+  not refutation — on 2026-07-03 a TRUE claim (Cavill = Enright, comm-link 20401) was
+  wrongly marked ❌ this way. If the pinned source is unreachable (JS-rendered RSI page,
+  API gap), report ✅ per the ledger with a note "per ledger, last verified <date>; source
+  currently unreachable" instead of flipping to ❌/❓.
+- If your evidence genuinely contradicts a ledger entry, the verdict is ❌ AND you flag the
+  ledger file for a status flip — its `usage` list is the blast-radius map of pages to fix.
+
+**After the audit, write back:**
+
+- Re-confirmed a ledger claim → update its `lastVerified` to today.
+- Verified a claim not yet in the ledger → create its file (follow the README schema; seed
+  `usage` with the page you audited).
+- Refuted or downgraded a ledger claim → flip its `status`, note why below the frontmatter,
+  and list the affected pages from `usage` in your report.
+
+---
+
 ## Strict allowed sources — use ONLY these. No exceptions.
 
 ### A. Star Citizen Wiki Comm-Link API (official RSI Comm-Link blog)
@@ -127,9 +160,10 @@ If site copy uses any of these three terms for the wrong concept, flag ⚠️.
 - "Seamless space-to-surface flight is a core design goal — and it works in the live alpha" is accurate.
 - "No loading screens" as a blanket guarantee → ⚠️ NEEDS REPHRASE. There is an initial login/ASOP loading screen; the flight itself is seamless.
 
-### "Highest-funded crowdfunded game in history"
+### "Highest-funded crowdfunded game in history" / $1 billion
 
-- No Comm-Link asserts this in language verifiable from the API. The RSI funding tracker is JS-rendered and returns title-only via WebFetch. → ❓ UNVERIFIABLE FROM OFFICIAL SOURCES. Suggest softening to "one of the highest-funded crowdfunded games."
+- The **$1B crossing (May 24, 2026)** is ledger-verified (`funding-one-billion-may-2026`) against the RSI funding tracker, which is JS-rendered and returns title-only via WebFetch — do not flip to ❌/❓ on a failed fetch; defer to the ledger or verify in a browser.
+- The **superlative** ("most/highest-funded in history") remains not assertable from CIG sources (`funding-most-crowdfunded-project`, status unverifiable). Acceptable copy states the verified $1B fact; a hard comparative sourced to third-party rankings → ⚠️.
 
 ### Crowdfunding launch year
 
@@ -205,6 +239,8 @@ Hard cap: **800 words total** unless the user gives you more than fifteen claims
 
 ## Self-check before returning
 
+- [ ] The claims ledger (`docs/claims/`) was grepped BEFORE every ❌ and ❓ verdict, and no verdict contradicts a ledger entry without direct contradicting evidence.
+- [ ] Every verdict was written back to the ledger (lastVerified bumps, new claim files, status flips).
 - [ ] Every cited URL is on the allowed-source list (api.star-citizen.wiki, developertracker.com, robertsspaceindustries.com, youtube.com/c/StarCitizen). No third-party domains.
 - [ ] Every ❓ entry includes the search terms you tried, so the user can verify the gap is real.
 - [ ] Every ⚠️ or ❌ entry includes a one-sentence corrected phrasing.
